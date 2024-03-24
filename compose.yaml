@@ -1,1 +1,24 @@
+version: "3.9"
 services:
+  mysql:
+    image: 'mysql:8.3.0'
+    environment:
+      - 'MYSQL_DATABASE=samples_dev_db'
+      - 'MYSQL_PASSWORD=Mysql123#@!'
+      - 'MYSQL_USER=mysqluser'
+      - 'MYSQL_ROOT_PASSWORD=Root123#@!'
+
+    ports:
+      - '3307:3306'
+  app:
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3307/samples_dev_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: Mysql123#@!
+volumes:
+  mysql-data:
